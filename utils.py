@@ -10,6 +10,8 @@ def collectWeatherData():
     #   This code is pulled from my DA4 repo.    #
     ##############################################
 
+    # This collects weather data from a MeteoStat URL for Spokane, WA and cleans it for the sake of this project
+
     # Get MeteoStat URL 
     url = "https://meteostat.p.rapidapi.com"
     headers = {"x-rapidapi-key": "85864ca846mshd96c3c76ac7a9bdp1c9f0ajsn898c7e632234"}
@@ -27,7 +29,6 @@ def collectWeatherData():
 
     # Get latitude and longitude of user's city 
     json_obj = mapBoxResponse.json()
-
 
     results = json_obj["features"][0]
     results = results["properties"]
@@ -48,7 +49,6 @@ def collectWeatherData():
     daily_response = daily_response.json()
     daily_response = daily_response["data"]
 
-    
     columns = ["date", "tavg", "tmin", "tmax", "prcp", "snow", "wdir", "wspd", "wpgt", "pres", "tsun"]
     df = pd.DataFrame(daily_response)
 
@@ -101,14 +101,13 @@ def collectStravaData():
             
             exception_count+=1
 
-
     df_columns = df_cleaned.columns
 
     # Manually remove unnecessary columns
     df_cleaned = df_cleaned.drop("Filename", axis=1)
     df_cleaned = df_cleaned.drop("From Upload", axis=1)
 
-    # I realized after the fact that pandas already does this, but I felt bad deleting my work
+    # I realized after the fact that pandas already does this, but I was sad to delete code that I figured out on my own...
     """
     monthDecoder = {"Jan": 1, "Feb" : 2, "Mar" : 3, "Apr" : 4, "May" : 5, "Jun" : 6, "Jul" : 7, "Aug" : 8, "Sep" : 9, "Oct" : 10, "Nov" : 11, "Dec" : 12}
     for date in df_cleaned["Activity Date"]:
