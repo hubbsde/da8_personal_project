@@ -106,6 +106,7 @@ def collectStravaData():
     # Manually remove unnecessary columns
     df_cleaned = df_cleaned.drop("Filename", axis=1)
     df_cleaned = df_cleaned.drop("From Upload", axis=1)
+    df_cleaned = df_cleaned.drop("Relative Effort.1", axis=1)
 
     # I realized after the fact that pandas already does this, but I was sad to delete code that I figured out on my own...
     """
@@ -136,3 +137,20 @@ def collectStravaData():
 
     # Write cleaned data to csv 
     df_cleaned.to_csv("devyn_CLEANED_strava_activities.csv")
+
+
+def calculateStravaStats():
+
+    # Calculate Activity Total 
+
+    # Calculate Rowing Total
+
+    # Calculate Ride Total
+
+    # Calculate average elapsed time in hours:minutes
+
+    # Calculate average heart rate 
+
+    # Calculate average Relative Effort 
+
+    # Calculate std of Relative Effort 
