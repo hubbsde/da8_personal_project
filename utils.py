@@ -61,13 +61,16 @@ def collectWeatherData():
             df.pop(column)
 
     # Set date column to datetime objects 
-    df["date"] = pd.to_datetime(df["date"])
+    df["date"] = pd.to_datetime(df["date"]).dt.normalize()
 
     # Shorten to start time of recorded activities from devyn_strava_activities
     startDate = datetime.strptime("2024-5-13", "%Y-%m-%d")
     df = df[df["date"] >= startDate]
 
-    df.set_index("date", inplace=True)
+    # Renaming for future purposes 
+    df = df.rename(columns={"date" : "Activity Date"})
+
+    df.set_index("Activity Date", inplace=True)
 
     # Write cleaned DataFrame to a csv 
     df.to_csv(cityName + "_CLEANED_daily_weather.csv")
@@ -130,7 +133,7 @@ def collectStravaData():
 
     # Convert ["Activity Date"] to datetime objects 
     endingDate = datetime.strptime("2025-2-23", "%Y-%m-%d")
-    df_cleaned["Activity Date"] = pd.to_datetime(df_cleaned["Activity Date"])
+    df_cleaned["Activity Date"] = pd.to_datetime(df_cleaned["Activity Date"]).dt.normalize()
     df_cleaned = df_cleaned[df_cleaned["Activity Date"] <= endingDate]
 
     df_cleaned.set_index("Activity Date", inplace=True)
@@ -141,16 +144,37 @@ def collectStravaData():
 
 def calculateStravaStats():
 
+    df = pd.read_csv("devyn_CLEANED_strava_activities.csv")
+
     # Calculate Activity Total 
+    activity_total = round(df["Activity Name"].count(), 2)
 
-    # Calculate Rowing Total
-
-    # Calculate Ride Total
-
-    # Calculate average elapsed time in hours:minutes
+    # Calculate average moving time
+    avg_time_mins = round(df["Moving Time"].mean() / 60, 2)
 
     # Calculate average heart rate 
+    avg_hr = round(df["Average Heart Rate"].mean(), 2)
 
     # Calculate average Relative Effort 
+    avg_RE = round(df["Relative Effort"].mean(), 2)
 
-    # Calculate std of Relative Effort 
+    # Calculate std of Relative Effort
+    std_RE = round(df["Relative Effort"].std(), 2)
+
+    # Calculate Rowing Total
+    rowing_df = df.groupby("Activity Type").get_group("Rowing")
+    rowing_total = round(rowing_df["Activity Name"].count(), 2)
+
+    # Calculate average Relative Effort of Rowing Activities
+    rowing_RE_avg = round(rowing_df["Relative Effort"].mean(), 2)
+
+    # Calculate Ride Total
+    ride_df = df.groupby("Activity Type").get_group("Ride")
+    ride_total = round(ride_df["Activity Name"].count(), 2)
+
+    # Calculate average Relative Effort of Ride Activities
+    ride_RE_avg = round(ride_df["Relative Effort"].mean(), 2)
+
+    stats_ser = pd.Series([activity_total, avg_time_mins, avg_hr, avg_RE, std_RE, rowing_total, rowing_RE_avg, ride_total, ride_RE_avg], 
+                          index=["Total Activities", "Average Active Time (in minutes)", "Average Heart Rate", "Average Relative Effort", "Relative Effort StDev", "Total Rowing Activities", "Average RE for Rowing", "Total Ride Activities", "Average RE for Riding"])
+    return stats_ser
