@@ -168,6 +168,9 @@ def calculateStravaStats():
     rowing_df = df.groupby("Activity Type").get_group("Rowing")
     rowing_total = round(rowing_df["Activity Name"].count(), 2)
 
+    # Calculate Rowing average active minutes
+    rowing_mins = round(rowing_df["Moving Time"].mean() / 60, 2)
+
     # Calculate average Relative Effort of Rowing Activities
     rowing_RE_avg = round(rowing_df["Relative Effort"].mean(), 2)
 
@@ -178,11 +181,14 @@ def calculateStravaStats():
     ride_df = df.groupby("Activity Type").get_group("Ride")
     ride_total = round(ride_df["Activity Name"].count(), 2)
 
+    # Calculate Ride average active minutes 
+    ride_mins = round(ride_df["Moving Time"].mean() / 60, 2)
+
     # Calculate average Relative Effort of Ride Activities
     ride_RE_avg = round(ride_df["Relative Effort"].mean(), 2)
 
-    stats_ser = pd.Series([activity_total, avg_time_mins, avg_temp, avg_hr, avg_RE, std_RE, rowing_total, rowing_RE_avg, rowing_avg_temp, ride_total, ride_RE_avg], 
-                          index=["Total Activities", "Average Active Time (in minutes)", "Average Temperature (F)", "Average Heart Rate", "Average Relative Effort", "Relative Effort StDev", "Total Rowing Activities", "Average RE for Rowing", "Average Temp for Rowing (F)", "Total Ride Activities", "Average RE for Riding"])
+    stats_ser = pd.Series([activity_total, avg_time_mins, avg_temp, avg_hr, avg_RE, std_RE, rowing_total, rowing_mins, rowing_RE_avg, rowing_avg_temp, ride_total, ride_mins, ride_RE_avg], 
+                          index=["Total Activities", "Average Active Time (in minutes)", "Average Temperature (F)", "Average Heart Rate", "Average Relative Effort", "Relative Effort StDev", "Total Rowing Activities", "Average Rowing Active Time (mins)", "Average RE for Rowing", "Average Temp for Rowing (F)", "Total Ride Activities", "Average Ride Active Time (mins)",  "Average RE for Riding"])
     return stats_ser
 
 def createTempScatter(activity, group):
@@ -206,7 +212,7 @@ def createHRScatter(activity, group):
     # Create a scatter graph based on Average Heart Rate over time 
 
     hr_data = group["Average Heart Rate"]
-    date_data = group["Activity Date"]
+    date_data = group["Moving Time"]
 
     if len(hr_data) > 10:
         plt.figure()
