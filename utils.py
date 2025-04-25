@@ -217,15 +217,15 @@ def createHRScatter(activity, group):
     if len(hr_data) > 10:
         plt.figure()
         plt.scatter(date_data, hr_data)
-        plt.xlabel("Date")
+        plt.xlabel("Total Active Time (mins)")
         plt.xticks(rotation=45)
         plt.ylabel("Average Heart Rate")
-        plt.title("Average Heart Rate of " + activity + " Activity Over Time")
+        plt.title("Average Heart Rate of " + activity + " Activity Compared to Active Time")
         plt.tight_layout()
 
         # Scale down labels because of a large amount of instances
-        if activity == "Rowing":
-            plt.xticks(ticks=group.index[::7], rotation=45)
-            plt.tight_layout()
+        #if activity == "Rowing":
+        #    plt.xticks(ticks=group.index[::7], rotation=45)
+        #    plt.tight_layout()
 
         plt.show()
