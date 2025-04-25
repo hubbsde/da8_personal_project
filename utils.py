@@ -144,13 +144,16 @@ def collectStravaData():
 
 def calculateStravaStats():
 
-    df = pd.read_csv("devyn_CLEANED_strava_activities.csv")
+    df = pd.read_csv("merged_data.csv")
 
     # Calculate Activity Total 
     activity_total = round(df["Activity Name"].count(), 2)
 
     # Calculate average moving time
     avg_time_mins = round(df["Moving Time"].mean() / 60, 2)
+
+    # Calculate average temperature 
+    avg_temp = round(df["tavg"].mean(), 2)
 
     # Calculate average heart rate 
     avg_hr = round(df["Average Heart Rate"].mean(), 2)
@@ -168,6 +171,9 @@ def calculateStravaStats():
     # Calculate average Relative Effort of Rowing Activities
     rowing_RE_avg = round(rowing_df["Relative Effort"].mean(), 2)
 
+    # Calculate average temperature on days of Rowing Activities
+    rowing_avg_temp = round(rowing_df["tavg"].mean(), 2)
+
     # Calculate Ride Total
     ride_df = df.groupby("Activity Type").get_group("Ride")
     ride_total = round(ride_df["Activity Name"].count(), 2)
@@ -175,6 +181,40 @@ def calculateStravaStats():
     # Calculate average Relative Effort of Ride Activities
     ride_RE_avg = round(ride_df["Relative Effort"].mean(), 2)
 
-    stats_ser = pd.Series([activity_total, avg_time_mins, avg_hr, avg_RE, std_RE, rowing_total, rowing_RE_avg, ride_total, ride_RE_avg], 
-                          index=["Total Activities", "Average Active Time (in minutes)", "Average Heart Rate", "Average Relative Effort", "Relative Effort StDev", "Total Rowing Activities", "Average RE for Rowing", "Total Ride Activities", "Average RE for Riding"])
+    stats_ser = pd.Series([activity_total, avg_time_mins, avg_temp, avg_hr, avg_RE, std_RE, rowing_total, rowing_RE_avg, rowing_avg_temp, ride_total, ride_RE_avg], 
+                          index=["Total Activities", "Average Active Time (in minutes)", "Average Temperature (F)", "Average Heart Rate", "Average Relative Effort", "Relative Effort StDev", "Total Rowing Activities", "Average RE for Rowing", "Average Temp for Rowing (F)", "Total Ride Activities", "Average RE for Riding"])
     return stats_ser
+
+def createTempScatter(activity, group):
+
+    time_data = group["Moving Time"]
+    temp_data = group["tavg"]
+
+    if len(time_data) > 10:
+        plt.figure()
+        plt.scatter(temp_data, time_data, alpha=0.7)
+        plt.xlabel("Average Temperature (F)")
+        plt.ylabel("Total Moving Time (min)")
+        plt.title("Active Time of " + activity + " Activity Compared to Average Temperature")
+        plt.tight_layout()
+        plt.show
+
+def createHRHist(activity, group):
+
+    hr_data = group["Average Heart Rate"]
+    date_data = group["Activity Date"]
+
+    if len(hr_data) > 10:
+        plt.figure()
+        plt.scatter(date_data, hr_data)
+        plt.xlabel("Date")
+        plt.xticks(rotation=45)
+        plt.ylabel("Average Heart Rate")
+        plt.title("Average Heart Rate of " + activity + " Activity Over Time")
+        plt.tight_layout()
+
+        if activity == "Rowing":
+            plt.xticks(ticks=group.index[::7], rotation=45)
+            plt.tight_layout()
+
+        plt.show()
