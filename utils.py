@@ -187,6 +187,8 @@ def calculateStravaStats():
 
 def createTempScatter(activity, group):
 
+    # Create a scatter graph based on Active Minutes compared to Temperature 
+
     time_data = group["Moving Time"]
     temp_data = group["tavg"]
 
@@ -199,7 +201,9 @@ def createTempScatter(activity, group):
         plt.tight_layout()
         plt.show
 
-def createHRHist(activity, group):
+def createHRScatter(activity, group):
+
+    # Create a scatter graph based on Average Heart Rate over time 
 
     hr_data = group["Average Heart Rate"]
     date_data = group["Activity Date"]
@@ -213,6 +217,7 @@ def createHRHist(activity, group):
         plt.title("Average Heart Rate of " + activity + " Activity Over Time")
         plt.tight_layout()
 
+        # Scale down labels because of a large amount of instances
         if activity == "Rowing":
             plt.xticks(ticks=group.index[::7], rotation=45)
             plt.tight_layout()
