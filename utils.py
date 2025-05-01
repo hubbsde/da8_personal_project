@@ -110,6 +110,7 @@ def collectStravaData():
     df_cleaned = df_cleaned.drop("Filename", axis=1)
     df_cleaned = df_cleaned.drop("From Upload", axis=1)
     df_cleaned = df_cleaned.drop("Relative Effort.1", axis=1)
+    df_cleaned = df_cleaned.drop("Distance", axis=1)
 
     # I realized after the fact that pandas already does this, but I was sad to delete code that I figured out on my own...
     """
