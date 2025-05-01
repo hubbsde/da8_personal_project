@@ -229,3 +229,91 @@ def createHRScatter(activity, group):
         #    plt.tight_layout()
 
         plt.show()
+
+def monthlyRowBar(rowing_df):
+
+    # Create a bar chart of average relative effort per month of rowing activities 
+
+    juneRow = rowing_df[
+    (rowing_df["Activity Date"] >= "2024-06-01") & 
+    (rowing_df["Activity Date"] < "2024-07-01")
+    ]
+
+    julyRow = rowing_df[
+    (rowing_df["Activity Date"] >= "2024-07-01") & 
+    (rowing_df["Activity Date"] < "2024-08-01")
+    ]
+
+    sepRow = rowing_df[
+    (rowing_df["Activity Date"] >= "2024-09-01") & 
+    (rowing_df["Activity Date"] < "2024-10-01")
+    ]
+
+    octRow = rowing_df[
+    (rowing_df["Activity Date"] >= "2024-10-01") & 
+    (rowing_df["Activity Date"] < "2024-11-01")
+    ]
+
+    novRow = rowing_df[
+    (rowing_df["Activity Date"] >= "2024-11-01") & 
+    (rowing_df["Activity Date"] < "2024-12-01")
+    ]
+
+    decRow = rowing_df[
+    (rowing_df["Activity Date"] >= "2024-12-01") & 
+    (rowing_df["Activity Date"] < "2025-01-01")
+    ]
+
+    janRow = rowing_df[
+    (rowing_df["Activity Date"] >= "2025-01-01") & 
+    (rowing_df["Activity Date"] < "2025-02-01")
+    ]
+
+    febRow = rowing_df[
+    (rowing_df["Activity Date"] >= "2025-02-01") & 
+    (rowing_df["Activity Date"] < "2025-03-01")
+    ]
+
+    months = ["June", "July", "September", "October", "November", "December", "January", "February"]
+    monthlyRows = [juneRow["Relative Effort"].mean(), julyRow["Relative Effort"].mean(), sepRow["Relative Effort"].mean(), octRow["Relative Effort"].mean(), novRow["Relative Effort"].mean(), decRow["Relative Effort"].mean(), janRow["Relative Effort"].mean(), febRow["Relative Effort"].mean()]
+
+    plt.figure()
+    plt.bar(months, monthlyRows)
+    plt.title("Relative Effort of Rowing Activities by Month")
+    plt.ylabel("Average Relative Effort")
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
+
+def averageHRBar (rowing_df, ride_df):
+    
+    first_row = rowing_df[
+    (rowing_df["Activity Date"] >= "2024-06-01") & 
+    (rowing_df["Activity Date"] < "2024-12-01")
+    ]
+
+    second_row = rowing_df[
+    (rowing_df["Activity Date"] >= "2024-12-01") & 
+    (rowing_df["Activity Date"] < "2025-03-01")
+    ]
+
+    first_ride = ride_df[
+    (ride_df["Activity Date"] >= "2024-06-01") & 
+    (ride_df["Activity Date"] < "2024-12-01")
+    ]
+
+    second_ride = ride_df[
+    (ride_df["Activity Date"] >= "2024-12-01") & 
+    (ride_df["Activity Date"] < "2025-03-01")
+    ]
+
+    timeline = ["Rowing 2024", "Ride 2024", "Rowing 2025", "Ride 2025"]
+    data = [first_row["Moving Time"].mean(), first_ride["Moving Time"].mean(), second_row["Moving Time"].mean(), second_ride["Moving Time"].mean()]
+
+    plt.figure()
+    plt.bar(timeline, data)
+    plt.title("Average HR Compared by Activity")
+    plt.ylabel("Average HR")
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show
