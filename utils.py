@@ -287,7 +287,10 @@ def monthlyRowBar(rowing_df):
     plt.show()
 
 def averageHRBar (rowing_df, ride_df):
-    
+
+    # Create a barchart of average heart rate for first and second semester of Rowing/Ride activities 
+
+    # Split into semesters (June-November, December-March)
     first_row = rowing_df[
     (rowing_df["Activity Date"] >= "2024-06-01") & 
     (rowing_df["Activity Date"] < "2024-12-01")
