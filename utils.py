@@ -342,3 +342,5 @@ def prepareClassificationDF():
 
     # For the sake of machine learning
     rowing_df.drop(["Activity Name", "Activity Date", "Activity ID", "Activity Type"], axis="columns", inplace=True)
+
+    return rowing_df
