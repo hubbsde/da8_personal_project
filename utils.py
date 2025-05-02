@@ -280,7 +280,7 @@ def monthlyRowBar(rowing_df):
 
     plt.figure()
     plt.bar(months, monthlyRows)
-    plt.title("Relative Effort of Rowing Activities by Month")
+    plt.title("Average Relative Effort of Rowing Activities by Month")
     plt.ylabel("Average Relative Effort")
     plt.xticks(rotation=45)
     plt.tight_layout()
@@ -318,3 +318,27 @@ def averageHRBar (rowing_df, ride_df):
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.show
+
+def prepareClassificationDF():
+    df = pd.read_csv("devyn_CLEANED_strava_activities.csv")
+    activity_df = df.groupby("Activity Type")
+    rowing_df = activity_df.get_group("Rowing")
+    rowing_df["Activity Date"] = pd.to_datetime(rowing_df["Activity Date"])
+    rowing_df.dropna(inplace=True)
+
+    # Create a label for "out of season" and "preseason" for the dataset 
+    season_labels = []
+
+    # Assign a label based on month
+    for date in rowing_df["Activity Date"]:
+        month = date.month
+        if month in [5, 6, 7, 8]:
+            season_labels.append("out of season")
+        else:
+            season_labels.append("preseason")
+
+    # Add the list as a new column
+    rowing_df["Season"] = season_labels
+
+    # For the sake of machine learning
+    rowing_df.drop(["Activity Name", "Activity Date", "Activity ID", "Activity Type"], axis="columns", inplace=True)
